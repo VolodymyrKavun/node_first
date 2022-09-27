@@ -1,47 +1,53 @@
+const { Command } = require("commander");
+
 const contactsPath = require("./db");
 
-const invokeAction = async ({ action, contactId, name, email, phone }) => {
+const invokeAction = async ({ action, id, name, email, phone }) => {
   switch (action) {
-    case "listContacts":
-      const allContacts = await contactsPath.listContacts();
-      console.log(allContacts);
+    // Отримання усіх контактів
+    case "list":
+      const allContacts = await contactsPath.list();
+      console.table(allContacts);
       break;
-    case "getContactById":
-      const oneContact = await contactsPath.getContactById(contactId);
+    // Отримання контакту по "id"
+    case "get":
+      const oneContact = await contactsPath.get(id);
       console.log(oneContact);
       break;
-    case "addContact":
-      const newContact = await contactsPath.addContact({ name, email, phone });
+    // Додавання нового контакту
+    case "add":
+      const newContact = await contactsPath.add({ name, email, phone });
       console.log(newContact);
       break;
-    case "updateById":
-      const updateContact = await contactsPath.updateById(contactId, {
+    // Оновлення контакту
+    case "update":
+      const updateContact = await contactsPath.update(id, {
         name,
         email,
         phone,
       });
       console.log(updateContact);
       break;
-    case "removeContact":
-      const deleteContact = await contactsPath.removeContact(contactId);
+    // Видалення контакту по "id"
+    case "remove":
+      const deleteContact = await contactsPath.remove(id);
       console.log(deleteContact);
       break;
+
+    default:
+      console.warn("\x1B[31m Unknown action type!");
   }
 };
 
-// invokeAction({ action: "listContacts" });
-// invokeAction({ action: "getContactById", contactId: "8" });
-// invokeAction({
-//   action: "addContact",
-//   name: "Vova",
-//   email: "qwe123@gmail.com",
-//   phone: "(715) 598-5792",
-// });
-// invokeAction({
-//   action: "updateById",
-//   contactId: "DMp5KLMNe1purZLoisCBb",
-//   name: "Misha",
-//   email: "qaz987@gmal.com",
-//   phone: "(832) 001-0092",
-// });
-// invokeAction({ action: "removeContact", contactId: "DMp5KLMNe1purZLoisCBb" });
+const program = new Command();
+program
+  .option("-a, --action <type>", "choose action")
+  .option("-i, --id <type>", "user id")
+  .option("-n, --name <type>", "user name")
+  .option("-e, --email <type>", "user email")
+  .option("-p, --phone <type>", "user phone");
+
+program.parse();
+
+const options = program.opts();
+invokeAction(options);

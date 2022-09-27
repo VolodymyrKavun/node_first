@@ -7,19 +7,24 @@ const contactsPath = path.join(__dirname, "contacts.json");
 const updateContacts = async (contacts) =>
   await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
 
-const listContacts = async () => {
+// Отримання усіх контактів
+const list = async () => {
   const data = await fs.readFile(contactsPath, "utf-8");
   return JSON.parse(data);
 };
 
-const getContactById = async (contactId) => {
-  const contacts = await listContacts();
-  const result = contacts.find((item) => item.id === contactId);
+// Отримання контакту по "id"
+const get = async (id) => {
+  const idContact = String(id);
+  const contacts = await list();
+
+  const result = contacts.find((item) => item.id === idContact);
   return result || null;
 };
 
-const addContact = async ({ name, email, phone }) => {
-  const contacts = await listContacts();
+// Додавання нового контакту
+const add = async ({ name, email, phone }) => {
+  const contacts = await list();
   const newContact = {
     id: nanoid(),
     name,
@@ -31,20 +36,22 @@ const addContact = async ({ name, email, phone }) => {
   return newContact;
 };
 
-const updateById = async (contactId, { name, email, phone }) => {
-  const contacts = await listContacts();
-  const index = contacts.findIndex((item) => item.id === contactId);
+// Оновлення контакту
+const update = async (id, { name, email, phone }) => {
+  const contacts = await list();
+  const index = contacts.findIndex((item) => item.id === id);
   if (index === -1) {
     return null;
   }
-  contacts[index] = { contactId, name, email, phone };
+  contacts[index] = { id, name, email, phone };
   await updateContacts(contacts);
   return contacts[index];
 };
 
-const removeContact = async (contactId) => {
-  const contacts = await listContacts();
-  const index = contacts.findIndex((item) => item.id === contactId);
+// Видалення контакту по "id"
+const remove = async (id) => {
+  const contacts = await list();
+  const index = contacts.findIndex((item) => item.id === id);
   if (index === -1) {
     return null;
   }
@@ -54,9 +61,9 @@ const removeContact = async (contactId) => {
 };
 
 module.exports = {
-  listContacts,
-  getContactById,
-  addContact,
-  updateById,
-  removeContact,
+  list,
+  get,
+  add,
+  update,
+  remove,
 };
