@@ -2,6 +2,7 @@ const fs = require("fs/promises");
 const path = require("path");
 const { nanoid } = require("nanoid");
 
+// Отримуємо абсолютний шлях
 const contactsPath = path.join(__dirname, "contacts.json");
 
 const updateContacts = async (contacts) =>
