@@ -2,7 +2,7 @@
 
 Отримання усіх контактів
 
-https://ibb.co/7rSPgCS
+![image](https://ibb.co/7rSPgCS)
 
 Отримання контакту по "id"
 
