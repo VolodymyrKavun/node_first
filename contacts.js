@@ -50,4 +50,16 @@ program
 program.parse();
 
 const options = program.opts();
-invokeAction(options);
+// invokeAction(options);
+(async () => {
+  await invokeAction(options);
+})();
+
+// const start = async (options) => {
+//   try {
+//     await invokeAction(options);
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+// start(options);
